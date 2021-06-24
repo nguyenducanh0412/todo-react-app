@@ -15,7 +15,13 @@ function App() {
   }, []);
 
   const handleSubmitItem = (item) => {
-    const newItem = [...datasource, item];
+    const newItem = [
+      ...datasource.map((item) => ({
+        ...item,
+        isDetail: false,
+      })),
+      item,
+    ];
     LOCAL_STORAGE.setItem(KEY_TODO, JSON.stringify(newItem));
     setDatasource(newItem);
   };
@@ -25,6 +31,7 @@ function App() {
     findItem.forEach((v) => {
       if (v.id === item.id) {
         v.isChecked = item.isChecked;
+        v.isDetail = false;
       }
     });
     LOCAL_STORAGE.setItem(KEY_TODO, JSON.stringify(findItem));
