@@ -21,13 +21,15 @@ function App() {
         isDetail: false,
       })),
       item,
-    ];
+    ].sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate));
     LOCAL_STORAGE.setItem(KEY_TODO, JSON.stringify(newItem));
     setDatasource(newItem);
   };
 
   const handleUpdateItem = (item) => {
-    const findItem = [...datasource];
+    const findItem = [...datasource].sort(
+      (a, b) => new Date(b.dueDate) - new Date(a.dueDate)
+    );
     findItem.forEach((v) => {
       if (v.id === item.id) {
         v.isChecked = item.isChecked;
@@ -39,9 +41,9 @@ function App() {
   };
 
   const handleDeleteItem = (id) => {
-    const findItem = [...JSON.parse(LOCAL_STORAGE.getItem(KEY_TODO))].filter(
-      (v) => v.id !== id
-    );
+    const findItem = [...JSON.parse(LOCAL_STORAGE.getItem(KEY_TODO))]
+      .filter((v) => v.id !== id)
+      .sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate));
     LOCAL_STORAGE.setItem(KEY_TODO, JSON.stringify(findItem));
     setDatasource(findItem);
   };
@@ -78,16 +80,22 @@ function App() {
         v.isChecked = item.isChecked;
       }
     });
-    LOCAL_STORAGE.setItem(KEY_TODO, JSON.stringify(findItem));
-    setDatasource(findItem);
+    const sorted = findItem.sort(
+      (a, b) => new Date(b.dueDate) - new Date(a.dueDate)
+    );
+    LOCAL_STORAGE.setItem(KEY_TODO, JSON.stringify(sorted));
+    setDatasource(sorted);
   };
 
   const handleDeleteMultiple = (lstId) => {
     const findItem = [...JSON.parse(LOCAL_STORAGE.getItem(KEY_TODO))].filter(
       (v) => !lstId.includes(v.id)
     );
-    LOCAL_STORAGE.setItem(KEY_TODO, JSON.stringify(findItem));
-    setDatasource(findItem);
+    const sorted = findItem.sort(
+      (a, b) => new Date(b.dueDate) - new Date(a.dueDate)
+    );
+    LOCAL_STORAGE.setItem(KEY_TODO, JSON.stringify(sorted));
+    setDatasource(sorted);
   };
 
   return (
