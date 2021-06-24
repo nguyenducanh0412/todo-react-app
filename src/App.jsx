@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { KEY_TODO, LOCAL_STORAGE } from "./utils";
 import { v4 as uuidv4 } from "uuid";
@@ -32,7 +32,9 @@ function App() {
   };
 
   const handleDeleteItem = (id) => {
-    const findItem = [...JSON.parse(LOCAL_STORAGE.getItem(KEY_TODO))].filter((v) => v.id !== id);
+    const findItem = [...JSON.parse(LOCAL_STORAGE.getItem(KEY_TODO))].filter(
+      (v) => v.id !== id
+    );
     LOCAL_STORAGE.setItem(KEY_TODO, JSON.stringify(findItem));
     setDatasource(findItem);
   };
