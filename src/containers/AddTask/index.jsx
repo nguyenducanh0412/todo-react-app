@@ -1,0 +1,99 @@
+import React from "react";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
+
+function AddTask({ onSubmit }) {
+  const initialValues = {
+    taskTitle: "",
+    taskDescription: "",
+    dueDate: moment(new Date()).format("yyyy-MM-DD"),
+    piority: "normal",
+  };
+  const yupSchema = Yup.object().shape({
+    taskTitle: Yup.string().required("Task title is a required field."),
+  });
+
+  return (
+    <div className="add-task">
+      <h4 className="title">New Task</h4>
+      <div className="form-content-add">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={yupSchema}
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            onSubmit({
+              ...values,
+              id: uuidv4(),
+              isChecked: false,
+              isDetail: false,
+            });
+            setSubmitting(false);
+            resetForm();
+          }}
+        >
+          {({ values, handleChange, handleBlur, handleSubmit }) => (
+            <Form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <Field
+                  type="text"
+                  name="taskTitle"
+                  className="form-control"
+                  placeholder="Add new task ..."
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.taskTitle}
+                />
+                <ErrorMessage
+                  name="taskTitle"
+                  component="div"
+                  className="invalid-field"
+                />
+              </div>
+              <div className="form-group">
+                <label>Description</label>
+                <Field
+                  as="textarea"
+                  cols="30"
+                  rows="6"
+                  name="taskDescription"
+                  className="form-control"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.taskDescription}
+                />
+              </div>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Due Date</label>
+                  <Field
+                    className="form-control"
+                    type="date"
+                    name="dueDate"
+                    min={moment(new Date()).format("yyyy-MM-DD")}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.dueDate}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Piority</label>
+                  <Field as="select" className="form-control" name="piority">
+                    <option value="nomal">Nomal</option>
+                    <option value="low">Low</option>
+                    <option value="high">High</option>
+                  </Field>
+                </div>
+              </div>
+              <button className="btn btn-success" type="submit">
+                Add
+              </button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </div>
+  );
+}
+export default AddTask;
